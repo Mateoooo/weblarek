@@ -139,7 +139,7 @@ if (updatedData) {
 console.log('\n- Тестирование пошагового заполнения данных покупателя:');
 const stepBuyer = new Buyer();
 
-stepBuyer.setEmail('step.by.step@example.com');
+stepBuyer.setEmail('qwerty@example.com');
 console.log('  1. Установлен email');
 
 stepBuyer.setPhone('+79991112233');
@@ -168,7 +168,7 @@ buyer.clear();
 console.log('\n- Данные покупателя очищены');
 console.log('- Данные после очистки:', buyer.getData());
 
-
+// ----------------------------------------------------------------------------------- //
 
 const api = new WebLarekAPI(API_URL);
 console.log('- API клиент создан');
