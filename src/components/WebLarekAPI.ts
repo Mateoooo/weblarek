@@ -1,23 +1,14 @@
-import { Api } from '../../components/base/Api';
-import { IProduct, IOrder, IOrderResult, IApiListResponse } from '../../types';
+import { IProduct, IOrder, IOrderResult, IApiListResponse, IApi } from '../types';
 
 export class WebLarekAPI {
 
-  private api: Api;
-
-  constructor(baseUrl: string, options: RequestInit = {}) {
-    this.api = new Api(baseUrl, options);
+  constructor( protected api: IApi) { 
+    console.log(' WebLarekAPI инициализирован');
   }
 
   getProductList(): Promise<IProduct[]> {
     return this.api.get<IApiListResponse<IProduct>>('/product')
-      .then(response => {
-        console.log('Получены данные с сервера: ', {
-          total: response.total,
-          itemsCount: response.items.length
-        });
-        return response.items;
-      });
+      .then(response => response.items);
   }
 
   submitOrder(orderData: IOrder): Promise<IOrderResult> {

@@ -21,24 +21,15 @@ export interface IBuyer {
   address: string;
 }
 
-export type TPayment = 'online' | 'offline';
+export type TPayment = 'online' | 'offline' | '';
 
-export type ValidationResult = {
-  payment?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-};
+export type ValidationResult = Partial<Record<keyof IBuyer, string>>;
 
 // Интерфейс для данных заказа
-export interface IOrder {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
-  total: number;
-  items: string[]; 
-}
+export interface IOrder extends IBuyer{
+    total: number; 
+    items: string[]; 
+} 
 
 // Интерфейс для результата отправки заказа
 export interface IOrderResult {

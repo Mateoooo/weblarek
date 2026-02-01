@@ -1,10 +1,11 @@
 import './scss/styles.scss';
-import { ProductList } from './components/base/Models/ProductList';
-import { Cart } from './components/base/Models/Cart';
-import { Buyer } from './components/base/Models/Buyer';
+import { ProductList } from './components/Models/ProductList';
+import { Cart } from './components/Models/Cart';
+import { Buyer } from './components/Models/Buyer';
 import { IProduct } from './types';
-import { WebLarekAPI } from './components/base/WebLarekAPI';
+import { WebLarekAPI } from './components/WebLarekAPI';
 import { apiProducts } from './utils/data';
+import { Api } from './components/base/Api';
 import { API_URL } from './utils/constants';
 
 console.log('Тестирование моделей данных...\n');
@@ -89,7 +90,7 @@ const buyer = new Buyer({
 });
 console.log('- Создан покупатель с email и телефоном');
 
-// Получаем данные (должен быть null, так как не все поля заполнены)
+// Получаем данные покупателя
 console.log('- Полные данные покупателя (частично заполнен):', buyer.getData());
 
 // Добавляем остальные данные
@@ -170,7 +171,8 @@ console.log('- Данные после очистки:', buyer.getData());
 
 // ----------------------------------------------------------------------------------- //
 
-const api = new WebLarekAPI(API_URL);
+const baseApi = new Api(API_URL);
+const api = new WebLarekAPI(baseApi); 
 console.log('- API клиент создан');
 
 // Создаем модель для хранения товаров с сервера
