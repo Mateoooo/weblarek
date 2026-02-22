@@ -1,16 +1,19 @@
 import { IProduct } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class ProductList {
 
   private items: IProduct[] = [];
   private previewItem: IProduct | null = null;
 
-  constructor(initialProducts: IProduct[] = []) {
+  constructor(protected events: IEvents, initialProducts: IProduct[] = []) {
     this.items = initialProducts;
   }
 
   setItems(products: IProduct[]): void {
     this.items = products;
+
+    this.events.emit('catalog:changed', { items: this.items });
   }
 
   getItems(): IProduct[] {
@@ -23,6 +26,8 @@ export class ProductList {
 
   setPreviewItem(item: IProduct): void {
     this.previewItem = item;
+
+    this.events.emit('preview:changed', { item: this.previewItem });
   }
 
   getPreviewItem(): IProduct | null {

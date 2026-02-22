@@ -7,6 +7,27 @@ export abstract class Component<T> {
     }
 
     // Инструментарий для работы с DOM в дочерних компонентах
+    
+    toggleClass(element: HTMLElement, className: string, force?: boolean) {
+        element.classList.toggle(className, force);
+    }
+
+    setDisabled(element: HTMLElement, state: boolean) {
+        if (element) {
+            if (state) {
+                element.setAttribute('disabled', 'disabled');
+            }
+            else {
+                element.removeAttribute('disabled');
+            }
+        }
+    }
+
+    protected setText(element: HTMLElement, value: unknown) {
+        if (element) {
+            element.textContent = String(value);
+        }
+    }
 
     // Установить изображение с альтернативным текстом
     protected setImage(element: HTMLImageElement, src: string, alt?: string) {

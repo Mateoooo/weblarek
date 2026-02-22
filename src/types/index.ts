@@ -42,3 +42,10 @@ export interface IApiListResponse<T> {
   total: number;
   items: T[];
 }
+
+export interface IOrderForm {
+  payment: string;
+  address: string;
+  email: string;
+  phone: string;
+}

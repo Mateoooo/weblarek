@@ -1,59 +1,86 @@
 import { IBuyer, TPayment, ValidationResult } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Buyer {
-
-  private payment: TPayment = '';  
+  private payment: TPayment = '';
   private email: string = '';
   private phone: string = '';
   private address: string = '';
 
-  constructor(initialData: Partial<IBuyer> = {}) {
-    if (initialData.payment) {
+  constructor(protected events: IEvents, initialData: Partial<IBuyer> = {}) {
+    if (initialData.payment !== undefined) {
       this.payment = initialData.payment;
     }
-    if (initialData.email) {
+    if (initialData.email !== undefined) {
       this.email = initialData.email;
     }
-    if (initialData.phone) {
+    if (initialData.phone !== undefined) {
       this.phone = initialData.phone;
     }
-    if (initialData.address) {
+    if (initialData.address !== undefined) {
       this.address = initialData.address;
     }
   }
 
   setData(data: Partial<IBuyer>): void {
-    if (data.payment !== undefined) {
+    let changed = false;
+    
+    if (data.payment !== undefined && data.payment !== this.payment) {
       this.payment = data.payment;
+      changed = true;
     }
-    if (data.email !== undefined) {
+    if (data.email !== undefined && data.email !== this.email) {
       this.email = data.email;
+      changed = true;
     }
-    if (data.phone !== undefined) {
+    if (data.phone !== undefined && data.phone !== this.phone) {
       this.phone = data.phone;
+      changed = true;
     }
-    if (data.address !== undefined) {
+    if (data.address !== undefined && data.address !== this.address) {
       this.address = data.address;
+      changed = true;
+    }
+    
+    if (changed) {
+      this.events.emit('buyer:changed', this.getData());
+      this.events.emit('formErrors:change', this.validate()); 
     }
   }
 
   setPayment(payment: TPayment): void {
-    this.payment = payment;
+    if (payment !== this.payment) {
+      this.payment = payment;
+      this.events.emit('buyer:changed', this.getData());
+      this.events.emit('formErrors:change', this.validate()); 
+    }
   }
 
   setEmail(email: string): void {
-    this.email = email;
+    if (email !== this.email) {
+      this.email = email;
+      this.events.emit('buyer:changed', this.getData());
+      this.events.emit('formErrors:change', this.validate()); 
+    }
   }
 
   setPhone(phone: string): void {
-    this.phone = phone;
+    if (phone !== this.phone) {
+      this.phone = phone;
+      this.events.emit('buyer:changed', this.getData());
+      this.events.emit('formErrors:change', this.validate()); 
+    }
   }
 
   setAddress(address: string): void {
-    this.address = address;
+    if (address !== this.address) {
+      this.address = address;
+      this.events.emit('buyer:changed', this.getData());
+      this.events.emit('formErrors:change', this.validate()); 
+    }
   }
 
-   getData(): IBuyer {
+  getData(): IBuyer {
     return {
       payment: this.payment,
       email: this.email,
@@ -67,32 +94,24 @@ export class Buyer {
     this.email = '';
     this.phone = '';
     this.address = '';
+    this.events.emit('buyer:changed', this.getData());
+    this.events.emit('formErrors:change', this.validate()); 
   }
 
   validate(): ValidationResult {
     const errors: ValidationResult = {};
     
-    let error: string | null;
+    const paymentError = this.validatePayment();
+    if (paymentError) errors.payment = paymentError;
     
-    error = this.validatePayment();
-    if (error) {
-      errors.payment = error;
-    }
+    const emailError = this.validateEmail();
+    if (emailError) errors.email = emailError;
     
-    error = this.validateEmail();
-    if (error) {
-       errors.email = error;
-    }
+    const phoneError = this.validatePhone();
+    if (phoneError) errors.phone = phoneError;
     
-    error = this.validatePhone();
-    if (error) {
-      errors.phone = error;
-    }
-
-    error = this.validateAddress();
-    if (error) {
-       errors.address = error;
-    }
+    const addressError = this.validateAddress();
+    if (addressError) errors.address = addressError;
 
     return errors;
   }
