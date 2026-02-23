@@ -1,44 +1,47 @@
 import { Card } from './Card';
 import { IEvents } from '../base/Events';
+import { ensureElement } from '../../utils/utils';
+import { categoryMap } from '../../utils/constants';
 import { IProduct } from '../../types';
-import { ensureElement } from '../../utils/utils'; 
 
 export class CardPreview extends Card<IProduct> {
+  protected categoryElement: HTMLElement;
+  protected imageElement: HTMLImageElement;
+  protected descriptionElement: HTMLElement;
   protected button: HTMLButtonElement;
-  protected isInCart: boolean = false;
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement,events: IEvents,private onButtonClick: () => void) {
     super(container, events);
+    
+    this.categoryElement = ensureElement<HTMLElement>('.card__category', container);
+    this.imageElement = ensureElement<HTMLImageElement>('.card__image', container);
+    this.descriptionElement = ensureElement<HTMLElement>('.card__text', container);
     this.button = ensureElement<HTMLButtonElement>('.card__button', container);
     
     this.button.addEventListener('click', () => {
-      if (this.button.hasAttribute('disabled')) {
-        return; 
-      }
-      this.events.emit(this.isInCart ? 'card:remove' : 'card:add',
-         { id: this.container.dataset.id });
+      this.onButtonClick();
     });
   }
 
-  set inCart(value: boolean) {
-    this.isInCart = value;
-
-    if (!this.button.hasAttribute('disabled')) {
-      this.setText(this.button, value ? 'Удалить из корзины' : 'В корзину');
-    }
+  set category(value: string) {
+    this.setText(this.categoryElement, value);
+    const modifier = categoryMap[value as keyof typeof categoryMap] || '';
+    this.categoryElement.className = `card__category ${modifier}`;
   }
 
-   set price(value: number | null) {
-    super.price = value; 
-    
-    if (this.button) {
-      if (value === null) {
-        this.setDisabled(this.button, true);
-        this.setText(this.button, 'Недоступно');
-      } else {
-        this.setDisabled(this.button, false);
-        this.setText(this.button, this.isInCart ? 'Удалить из корзины' : 'В корзину');
-      }
-    }
+  set image(value: string) {
+    this.setImage(this.imageElement, value, this.title);
+  }
+
+  set description(value: string) {
+    this.setText(this.descriptionElement, value);
+  }
+
+  set buttonText(value: string) {
+    this.setText(this.button, value);
+  }
+
+  set buttonDisabled(value: boolean) {
+    this.setDisabled(this.button, value);
   }
 }

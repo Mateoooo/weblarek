@@ -13,7 +13,6 @@ export class OrderForm extends Form<IOrderForm> {
 
     this.buttons.forEach(button => {
       button.addEventListener('click', () => {
-        this.payment = button.name;
         events.emit('payment:change', { payment: button.name });
       });
     });
@@ -24,22 +23,11 @@ export class OrderForm extends Form<IOrderForm> {
       this.toggleClass(button, 'button_alt-active', button.name === name);
     });
   }
-
-  get payment(): string {
-    const activeButton = this.buttons.find(button => 
-      button.classList.contains('button_alt-active')
-    );
-    return activeButton?.name || '';
-  }
-
-  set address(value: string) {
-    const input = this.container.elements.namedItem('address') as HTMLInputElement;
-    if (input)
-         input.value = value;
-  }
-
-  get address(): string {
-    const input = this.container.elements.namedItem('address') as HTMLInputElement;
-    return input?.value || '';
-  }
+  
+  set address(value: string) { 
+    const input = this.container.elements.namedItem('address') as HTMLInputElement; 
+    if (input) {
+      input.value = value; 
+    }
+  } 
 }
