@@ -19,6 +19,8 @@ export class Basket extends Component<IBasket> {
     this.totalElement = ensureElement<HTMLElement>('.basket__price', container);
     this.button = ensureElement<HTMLButtonElement>('.basket__button', container);
     
+    this.setDisabled(this.button, true);
+
     this.button.addEventListener('click', () => {
       this.events.emit('basket:order');
     });

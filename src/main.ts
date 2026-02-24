@@ -79,7 +79,7 @@ api.getProductList()
     console.error('Ошибка загрузки товаров:', error);
   });
 
-  
+
 // Рендеринг
 
 function renderCatalog(): void {
@@ -224,11 +224,7 @@ events.on('cart:changed', () => {
   header.counter = cartModel.getItemsCount();
   
   updatePreviewButton();
-  
-  if (document.querySelector('.basket')) {
-    renderBasket();
-    modal.content = basketComponent.render();
-  }
+  renderBasket();
 });
 
 // Изменение данных покупателя
@@ -256,7 +252,6 @@ events.on('formErrors:change', (errors: ValidationResult) => {
 
 // Нажатие кнопки открытия корзины 
 events.on('basket:open', () => {
-  renderBasket();
   modal.content = basketComponent.render();
   modal.open();
 });
